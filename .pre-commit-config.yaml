@@ -1,0 +1,20 @@
+repos:
+- repo: git://github.com/pre-commit/pre-commit-hooks
+  rev: v3.4.0
+  hooks:
+    - id: check-added-large-files
+    - id: check-byte-order-marker
+    - id: check-executables-have-shebangs
+    - id: check-symlinks
+    - id: check-json
+    - id: check-xml
+    - id: check-yaml
+    - id: detect-private-key
+    - id: end-of-file-fixer
+    - id: forbid-new-submodules
+    - id: trailing-whitespace
+      files: \.(scala|html|erb|slim|haml|ejs|jade|js|coffee|json|rb|py|css|scss|less|sh|tmpl|txt|yaml|yml|pp|md)$
+-   repo: https://github.com/softwaremill/scala-pre-commit-hooks
+    rev: v0.3.0
+    hooks: #mix and match any of the following:
+    -   id: sbt-scalafmt
