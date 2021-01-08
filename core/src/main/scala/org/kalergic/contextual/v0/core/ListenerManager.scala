@@ -22,6 +22,8 @@ private[core] class ListenerManagerImpl extends ListenerManager with ListenerNot
   private[this] val listeners: mutable.Set[ContextValueListener[_]] =
     java.util.concurrent.ConcurrentHashMap.newKeySet[ContextValueListener[_]].asScala
 
+  def currentListeners: Seq[ContextValueListener[_]] = Seq(listeners.toSeq: _*)
+
   override def addListener[V](listener: ContextValueListener[V]): Unit = listeners.add(listener)
   override def removeListener[V](listener: ContextValueListener[V]): Unit = listeners.remove(listener)
 
@@ -36,7 +38,7 @@ private[core] class ListenerManagerImpl extends ListenerManager with ListenerNot
   )(
     updateFn: ContextValueListener[V] => V => Unit
   ): Unit =
-    Seq(listeners.toSeq: _*).foreach {
+    currentListeners.filter(l => l.contextKey == key && typeOf[V] <:< l.valueTypeTag.tpe).foreach {
       case listener: ContextValueListener[V @unchecked] =>
         try {
           updateFn(listener)(value)
