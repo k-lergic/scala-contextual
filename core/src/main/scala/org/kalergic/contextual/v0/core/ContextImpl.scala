@@ -4,7 +4,7 @@ import scala.reflect.runtime.universe._
 
 import org.kalergic.contextual.v0.core.ContextDataMap.ContextDataValue
 
-private[core] class ThreadContext(val dataMap: ContextDataMap = new ContextDataMap, val notifier: ListenerNotifier)
+private[core] class ContextImpl(val dataMap: ContextDataMap = new ContextDataMap, val notifier: ListenerNotifier)
   extends Context {
 
   override def put[V: TypeTag](key: ContextKey[V], value: V): Option[V] = {
@@ -28,7 +28,7 @@ private[core] class ThreadContext(val dataMap: ContextDataMap = new ContextDataM
 
   private[this] def notifyCleared(): Unit = notifyContextUpdate(notifier.notifyRemove[Any])
 
-  private[core] def copy(): ThreadContext = new ThreadContext(dataMap = dataMap.copy(), notifier = notifier)
+  private[core] def copy(): ContextImpl = new ContextImpl(dataMap = dataMap.copy(), notifier = notifier)
   private[core] def activateForCurrentThread(): Unit = notifyContextUpdate(notifier.notifyPut[Any])
   private[core] def deactivateForCurrentThread(): Unit = clear()
 
