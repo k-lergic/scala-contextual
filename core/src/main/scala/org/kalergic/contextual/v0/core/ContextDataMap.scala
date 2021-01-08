@@ -14,7 +14,7 @@ private[core] object ContextDataMap {
 
     val valueTypeTag: TypeTag[V] = typeTag[V]
 
-    def checkTypeAndInvoke[W: TypeTag](key: ContextKey[V], targetFn: ContextKey[W] => W => Unit): Unit = {
+    private[core] def checkTypeAndInvoke[W: TypeTag](key: ContextKey[_], targetFn: ContextKey[W] => W => Unit): Unit = {
 
       val keyTypeParamType = key.valueTypeTag.tpe
       val valueTypeParamType = typeOf[V]
@@ -53,32 +53,32 @@ private[core] final class ContextDataMap {
 
   @volatile private[core] var data: Map[ContextKey[_], ContextDataValue[_]] = Map.empty
 
-  def put[V: TypeTag](key: ContextKey[V], value: ContextDataValue[V]): Option[ContextDataValue[V]] = {
+  private[core] def put[V: TypeTag](key: ContextKey[V], value: ContextDataValue[V]): Option[ContextDataValue[V]] = {
     val oldValue = typedGet(key)
     data += key -> value
     oldValue
   }
 
-  def remove[V](key: ContextKey[V]): Option[ContextDataValue[V]] = {
+  private[core] def remove[V](key: ContextKey[V]): Option[ContextDataValue[V]] = {
     val maybeValue: Option[ContextDataValue[V]] = get(key)
     data -= key
     maybeValue
   }
 
-  def apply[V](key: ContextKey[V]): ContextDataValue[V] =
+  private[core] def apply[V](key: ContextKey[V]): ContextDataValue[V] =
     typedGet(key).getOrElse(throw new NoSuchElementException(s"Key=$key not found"))
 
-  def get[V](key: ContextKey[V]): Option[ContextDataValue[V]] = typedGet[V](key)
+  private[core] def get[V](key: ContextKey[V]): Option[ContextDataValue[V]] = typedGet[V](key)
 
-  def clear(): Unit = data = Map.empty
+  private[core] def clear(): Unit = data = Map.empty
 
-  def keys: Iterable[ContextKey[_]] = data.keys
+  private[core] def keys: Iterable[ContextKey[_]] = data.keys
 
-  def isEmpty: Boolean = data.isEmpty
+  private[core] def isEmpty: Boolean = data.isEmpty
 
-  def nonEmpty: Boolean = data.nonEmpty
+  private[core] def nonEmpty: Boolean = data.nonEmpty
 
-  def size: Int = data.size
+  private[core] def size: Int = data.size
 
   private[core] def typedGet[V](key: ContextKey[V]): Option[ContextDataValue[V]] =
     data.get(key).map {
@@ -92,7 +92,7 @@ private[core] final class ContextDataMap {
 
   private[core] def untypedLookup(key: ContextKey[_]): ContextDataValue[_] = data(key)
 
-  def copy(): ContextDataMap = {
+  private[core] def copy(): ContextDataMap = {
     val copied = new ContextDataMap
     copied.data = data
     copied

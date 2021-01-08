@@ -6,7 +6,7 @@ import org.scalatest.matchers.should
 class ContextDataMapSpec extends AnyFlatSpec with should.Matchers {
   import ContextDataMap._
 
-  val stringKey: ContextKey[String] = ContextKey.forType[String]("keyname")
+  val stringKey: ContextKey[String] = ContextKey.forType[String]("testkey")
 
   "ContextDataMap" should "put and get" in {
     val cm = new ContextDataMap

@@ -12,7 +12,7 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
 
   class ListenerManagerFixture {
     val manager: ListenerManagerImpl = new ListenerManagerImpl
-    val testKey: ContextKey[String] = ContextKey.forType[String]("keyname")
+    val testKey: ContextKey[String] = ContextKey.forType[String]("testkey")
     val fakeListener: FakeListener[String] = new FakeListener[String](testKey)
   }
 
@@ -68,7 +68,7 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
   it should "only update the correct listeners on notification of a put" in new ListenerManagerFixture {
     manager.addListener(fakeListener)
 
-    val keyWithDifferentType: ContextKey[Int] = ContextKey.forType[Int]("keyname")
+    val keyWithDifferentType: ContextKey[Int] = ContextKey.forType[Int]("testkey")
     val keyWithDifferentName: ContextKey[String] = ContextKey.forType[String]("abc")
     val keyWithDifferentTypeAndName: ContextKey[Double] = ContextKey.forType[Double]("def")
 
@@ -95,7 +95,7 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
   it should "only update the correct listeners on notification of a remove" in new ListenerManagerFixture {
     manager.addListener(fakeListener)
 
-    val keyWithDifferentType: ContextKey[Int] = ContextKey.forType[Int]("keyname")
+    val keyWithDifferentType: ContextKey[Int] = ContextKey.forType[Int]("testkey")
     val keyWithDifferentName: ContextKey[String] = ContextKey.forType[String]("abc")
     val keyWithDifferentTypeAndName: ContextKey[Double] = ContextKey.forType[Double]("def")
 

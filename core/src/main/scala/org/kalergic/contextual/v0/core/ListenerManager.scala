@@ -13,8 +13,8 @@ trait ListenerManager {
 }
 
 private[core] trait ListenerNotifier { self: ListenerManager =>
-  def notifyPut[V: TypeTag](key: ContextKey[V])(value: V): Unit
-  def notifyRemove[V: TypeTag](key: ContextKey[V])(value: V): Unit
+  private[core] def notifyPut[V: TypeTag](key: ContextKey[V])(value: V): Unit
+  private[core] def notifyRemove[V: TypeTag](key: ContextKey[V])(value: V): Unit
 }
 
 private[core] class ListenerManagerImpl extends ListenerManager with ListenerNotifier with StrictLogging {
