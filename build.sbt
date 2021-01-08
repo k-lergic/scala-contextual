@@ -38,6 +38,7 @@ lazy val core = (projectMatrix in file("core"))
     ),
     coverageEnabled := true,
     libraryDependencies ++= Seq(
+      scalaCollectionCompat,
       scalactic,
       scalaLogging,
       TestLibs.scalatest
