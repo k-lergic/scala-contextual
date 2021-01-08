@@ -3,12 +3,12 @@ package org.kalergic.contextual.v0.core
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class ContextValueSpec extends AnyFlatSpec with should.Matchers {
+class ContextDataValueSpec extends AnyFlatSpec with should.Matchers {
 
-  import ContextMap._
+  import ContextDataMap._
 
   trait ContextValueFixture[V] {
-    def contextValue: ContextValue[V]
+    def contextValue: ContextDataValue[V]
     def expectedValue: V
     var valuePassed: Option[V] = None
     def someFun[T](key: ContextKey[T])(t: T): Unit = valuePassed = Some(t.asInstanceOf[V])
@@ -16,17 +16,17 @@ class ContextValueSpec extends AnyFlatSpec with should.Matchers {
 
   class ContextValueStringFixture extends ContextValueFixture[String] {
     val expectedValue = "Foo"
-    val contextValue: ContextValue[String] = ContextValue[String](expectedValue)
+    val contextValue: ContextDataValue[String] = ContextDataValue[String](expectedValue)
   }
 
   class ContextValueStringSeqFixture extends ContextValueFixture[Seq[String]] {
     val expectedValue = Seq("Hello", "World")
-    val contextValue: ContextValue[Seq[String]] = ContextValue[Seq[String]](expectedValue)
+    val contextValue: ContextDataValue[Seq[String]] = ContextDataValue[Seq[String]](expectedValue)
   }
 
   class ContextValueStringListFixture extends ContextValueFixture[List[String]] {
     val expectedValue = List("Foo", "Bar", "Baz")
-    val contextValue: ContextValue[List[String]] = ContextValue[List[String]](expectedValue)
+    val contextValue: ContextDataValue[List[String]] = ContextDataValue[List[String]](expectedValue)
   }
 
   "ContextValue" should "validate types and invoke the function if the types agree exactly" in new ContextValueStringFixture {
