@@ -3,15 +3,15 @@ package org.kalergic.contextual.v0.core
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class ContextImplSpec extends AnyFlatSpec with should.Matchers {
+class ThreadContextSpec extends AnyFlatSpec with should.Matchers {
 
   class ThreadContextFixture {
     val testKey: ContextKey[String] = ContextKey.forType[String]("testkey")
     val fakeManagerNotifier: FakeListenerManager = new FakeListenerManager {}
-    val context = new ContextImpl(notifier = fakeManagerNotifier)
+    val context = new ThreadContext(notifier = fakeManagerNotifier)
   }
 
-  "ContextImpl" should "store and retrieve" in new ThreadContextFixture {
+  "ThreadContext" should "store and retrieve" in new ThreadContextFixture {
     context.put(testKey, "four")
     context.get(testKey) should contain("four")
   }
@@ -182,18 +182,18 @@ class ContextImplSpec extends AnyFlatSpec with should.Matchers {
   }
 
   it should "construct a new instance of ThreadContext when copy is called" in new ThreadContextFixture {
-    val newContext: ContextImpl = context.copy()
+    val newContext: ThreadContext = context.copy()
     assert(newContext ne context)
   }
 
   it should "call copy on its data map and pass the result to the copy it is constructing when copy is called" in new ThreadContextFixture {
-    val newContext: ContextImpl = context.copy()
+    val newContext: ThreadContext = context.copy()
     assume(newContext ne context)
     assert(newContext.dataMap ne context.dataMap)
   }
 
   it should "pass its listener notifier instance to copies it constructs" in new ThreadContextFixture {
-    val newContext: ContextImpl = context.copy()
+    val newContext: ThreadContext = context.copy()
     assume(newContext ne context)
     assert(newContext.notifier eq context.notifier)
   }
