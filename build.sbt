@@ -21,7 +21,7 @@ ThisBuild / resolvers += "Artima Maven Repository" at "https://repo.artima.com/r
 
 publishArtifact := false
 
-lazy val core = (projectMatrix in file("core"))
+lazy val context = (projectMatrix in file("context"))
   .enablePlugins(SemVerPlugin)
   .enablePlugins(ShadingPlugin)
   .settings(
