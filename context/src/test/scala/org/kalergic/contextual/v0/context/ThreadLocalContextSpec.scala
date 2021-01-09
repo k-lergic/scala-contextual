@@ -23,7 +23,7 @@ class ThreadLocalContextSpec extends AnyFlatSpec with should.Matchers {
     @volatile var otherThreadContext: Option[ShareableContext] = None
 
     val thread: Thread = new Thread(() => {
-      threadLocalContext.set(Some(new FakeShareableContext))
+      threadLocalContext.setContext(Some(new FakeShareableContext))
       otherThreadContext = threadLocalContext.currentThreadContext
     })
 
@@ -71,7 +71,7 @@ class ThreadLocalContextSpec extends AnyFlatSpec with should.Matchers {
     }
 
     // This is the method under test
-    threadLocalContext.set(Some(newFake))
+    threadLocalContext.setContext(Some(newFake))
     assume(oldFakeDeactivated)
     assume(newFakeActivated)
     assume(oldFake.activateCallCount === 0)
@@ -97,7 +97,7 @@ class ThreadLocalContextSpec extends AnyFlatSpec with should.Matchers {
     threadLocalContext.threadLocalContext.set(Some(oldFake))
 
     // This is the method under test
-    threadLocalContext.set(None)
+    threadLocalContext.setContext(None)
     assume(oldFakeDeactivated)
     assume(oldFake.activateCallCount === 0)
     oldFake.deactivateCallCount shouldBe 1
@@ -120,7 +120,7 @@ class ThreadLocalContextSpec extends AnyFlatSpec with should.Matchers {
     }
 
     // This is the method under test
-    threadLocalContext.set(Some(newFake))
+    threadLocalContext.setContext(Some(newFake))
     assume(newFakeActivated)
     assume(newFake.deactivateCallCount === 0)
     newFake.activateCallCount shouldBe 1

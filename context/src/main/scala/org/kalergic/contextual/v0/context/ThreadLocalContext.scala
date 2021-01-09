@@ -7,7 +7,7 @@ private[context] trait ThreadLocalContext { self: Context with ListenerManager =
 
   private[context] def snapshot: Option[ShareableContext] = currentThreadContext.map(_.copy())
 
-  private[context] def set(context: Option[ShareableContext]): Unit = {
+  private[context] def setContext(context: Option[ShareableContext]): Unit = {
     currentThreadContext.foreach(_.deactivateForCurrentThread())
     threadLocalContext.set(context)
     context.foreach(_.activateForCurrentThread())

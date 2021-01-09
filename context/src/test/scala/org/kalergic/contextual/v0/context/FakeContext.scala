@@ -31,4 +31,7 @@ trait FakeContext extends Context {
     clearCallCount += 1
     dataMap.clear()
   }
+
+  def isEmpty: Boolean = dataMap.isEmpty
+  def nonEmpty: Boolean = dataMap.nonEmpty
 }
