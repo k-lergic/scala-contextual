@@ -193,6 +193,5 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
       fakeListener.removes.values shouldBe Seq("goodbye")
       fakeListener.removes.threadIds shouldBe Seq(expectedThreadId)
     }
-
   }
 }

@@ -57,6 +57,9 @@ private[context] final class ContextDataMap {
   @volatile private[context] var data: Map[ContextKey[_], ContextDataValue[_]] = Map.empty
 
   private[context] def put[V: TypeTag](key: ContextKey[V], value: ContextDataValue[V]): Option[ContextDataValue[V]] = {
+
+    //require(typeOf[V] == key.valueTypeTag.tpe)
+
     val oldValue = typedGet(key)
     data += key -> value
     oldValue

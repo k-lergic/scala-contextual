@@ -180,6 +180,18 @@ class ContextDataMapSpec extends AnyFlatSpec with should.Matchers {
     cm.typedGet[Double](key2) shouldBe empty
   }
 
+  it should "throw a ClassCastException when an internal typed get is called with the wrong type parameter" in {
+    val key1: ContextKey[String] = stringKey
+    val cm = new ContextDataMap
+
+    // This is somewhat contrived.
+    cm.put[Int](key1.asInstanceOf[ContextKey[Int]], ContextDataValue(77))
+
+    intercept[ClassCastException] {
+      cm.typedGet(key1)
+    }
+  }
+
   it should "return the correct data value for an untyped lookup" in {
     val key1: ContextKey[String] = stringKey
 
