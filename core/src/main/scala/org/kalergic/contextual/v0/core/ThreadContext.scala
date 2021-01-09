@@ -4,8 +4,10 @@ import scala.reflect.runtime.universe._
 
 import org.kalergic.contextual.v0.core.ContextDataMap.ContextDataValue
 
-private[core] class ThreadContext(val dataMap: ContextDataMap = new ContextDataMap, val notifier: ListenerNotifier)
-  extends Context {
+private[core] class ThreadContext(
+  private[core] val dataMap: ContextDataMap = new ContextDataMap,
+  private[core] val notifier: ListenerNotifier
+) extends ShareableContext {
 
   override def put[V: TypeTag](key: ContextKey[V], value: V): Option[V] = {
     val old = dataMap.put(key, ContextDataValue(value))
@@ -28,11 +30,7 @@ private[core] class ThreadContext(val dataMap: ContextDataMap = new ContextDataM
 
   private[this] def notifyCleared(): Unit = notifyContextUpdate(notifier.notifyRemove[Any])
 
-  private[core] def copy(): ThreadContext = new ThreadContext(dataMap = dataMap.copy(), notifier = notifier)
-  private[core] def activateForCurrentThread(): Unit = notifyContextUpdate(notifier.notifyPut[Any])
-  private[core] def deactivateForCurrentThread(): Unit = clear()
-
-  private[this] def notifyContextUpdate[W: TypeTag](updateFn: ContextKey[W] => W => Unit): Unit =
+  private[core] def notifyContextUpdate[W: TypeTag](updateFn: ContextKey[W] => W => Unit): Unit =
     dataMap.keys.foreach { key =>
       val untyped: ContextDataValue[_] = dataMap.untypedLookup(key)
       untyped.checkTypeAndInvoke(key, updateFn)
@@ -42,4 +40,9 @@ private[core] class ThreadContext(val dataMap: ContextDataMap = new ContextDataM
   private[core] def isEmpty: Boolean = dataMap.isEmpty
   private[core] def nonEmpty: Boolean = dataMap.nonEmpty
   private[core] def keys: Iterable[ContextKey[_]] = dataMap.keys
+
+  override private[core] def copy(): ThreadContext = new ThreadContext(dataMap = dataMap.copy(), notifier = notifier)
+  override private[core] def activateForCurrentThread(): Unit = notifyContextUpdate(notifier.notifyPut[Any])
+  override private[core] def deactivateForCurrentThread(): Unit = clear()
+
 }

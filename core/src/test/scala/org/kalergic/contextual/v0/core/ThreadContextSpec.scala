@@ -182,12 +182,12 @@ class ThreadContextSpec extends AnyFlatSpec with should.Matchers {
   }
 
   it should "construct a new instance of ThreadContext when copy is called" in new ThreadContextFixture {
-    val newContext: ThreadContext = context.copy()
+    val newContext: ShareableContext = context.copy()
     assert(newContext ne context)
   }
 
   it should "call copy on its data map and pass the result to the copy it is constructing when copy is called" in new ThreadContextFixture {
-    val newContext: ThreadContext = context.copy()
+    val newContext: ThreadContext with ShareableContext = context.copy()
     assume(newContext ne context)
     assert(newContext.dataMap ne context.dataMap)
   }
@@ -229,5 +229,4 @@ class ThreadContextSpec extends AnyFlatSpec with should.Matchers {
     fakeManagerNotifier.removes.keys shouldBe Seq(ck1, ck2)
     fakeManagerNotifier.removes.values shouldBe Seq("foo", 99)
   }
-
 }
