@@ -42,6 +42,7 @@ dist/*
 target/
 lib_managed/
 src_managed/
+.sbt/
 project/boot/
 project/plugins/project/
 
