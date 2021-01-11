@@ -21,23 +21,23 @@ ThisBuild / resolvers += "Artima Maven Repository" at "https://repo.artima.com/r
 
 publishArtifact := false
 
-lazy val commonSettings = Seq(
-  // This is required because sbt-project-matrix (for cross-compiling) has its own idea of what the project name is;
-  // we need to adjust for that.
-  name := shadingNameShader.value(s"scala-contextual-${name.value}"),
-  semVerEnforceAfterVersion := Some("1.0.0"),
-  scalacOptions ++= Seq(
+val commonScalaOptions = Seq(
     "-unchecked",
     "-deprecation",
     "-Xlint",
     "-Xfatal-warnings",
     "-Ywarn-dead-code"
-  ),
+  )
+
+lazy val commonSettings = Seq(
+  // This is required because sbt-project-matrix (for cross-compiling) has its own idea of what the project name is;
+  // we need to adjust for that.
+  name := shadingNameShader.value(s"scala-contextual-${name.value}"),
+  semVerEnforceAfterVersion := Some("1.0.0"),
+  scalacOptions ++= commonScalaOptions,
   coverageEnabled := true,
   libraryDependencies ++= Seq(
-    scalaCollectionCompat,
-    scalactic,
-    scalaLogging,
+    TestLibs.scalactic,
     TestLibs.scalatest
   )
 )
@@ -46,6 +46,12 @@ lazy val context = (projectMatrix in file("context"))
   .enablePlugins(SemVerPlugin)
   .enablePlugins(ShadingPlugin)
   .settings(commonSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      scalaCollectionCompat,
+      scalaLogging
+    )
+  )
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
 
 lazy val correlation = (projectMatrix in file("correlation"))
@@ -54,4 +60,8 @@ lazy val correlation = (projectMatrix in file("correlation"))
   .dependsOn(context)
   .settings(commonSettings)
   .settings(libraryDependencies += logback % Test) // Tests require a logging framework that uses MDC.
+  .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
+
+lazy val akkaStreamExample = (projectMatrix in file("akka-stream-example"))
+  .dependsOn(correlation)
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
