@@ -42,7 +42,6 @@ lazy val commonSettings = Seq(
   )
 )
 
-
 lazy val context = (projectMatrix in file("context"))
   .enablePlugins(SemVerPlugin)
   .enablePlugins(ShadingPlugin)
@@ -54,4 +53,5 @@ lazy val correlation = (projectMatrix in file("correlation"))
   .enablePlugins(ShadingPlugin)
   .dependsOn(context)
   .settings(commonSettings)
+  .settings(libraryDependencies += logback % Test) // Tests require a logging framework that uses MDC.
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
