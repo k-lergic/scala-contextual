@@ -6,7 +6,7 @@ import scala.concurrent.Future
 
 import com.typesafe.scalalogging.StrictLogging
 import org.kalergic.contextual.v0.contextualize._
-import org.kalergic.contextual.v0.correlation.{CorrelationId, CorrelationIdSupport}
+import org.kalergic.contextual.v0.correlation.{CorrelationId, CorrelationIdMDCSupport}
 
 /*
   This example is borrowed from, and modified from the following Akka Streams example, from the
@@ -43,7 +43,7 @@ object PrintTweetHashtags extends App with StrictLogging {
   import akka.stream.scaladsl._
   val akkaTag = Hashtag("#akka")
 
-  CorrelationIdSupport.install()
+  CorrelationIdMDCSupport.install()
   implicit val system: ActorSystem = ActorSystem(
     name = "reactive-tweets",
     defaultExecutionContext = Some(contextualized(scala.concurrent.ExecutionContext.Implicits.global))

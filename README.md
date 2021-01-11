@@ -63,7 +63,7 @@ import org.kalergic.contextual.v0.contextualize._
 import org.kalergic.contextual.v0.correlation._
 
 implicit val ec: ExecutionContext = contextualized(someScalaExecutionContext)
-CorrelationIdSupport.install()
+CorrelationIdMDCSupport.install()
 
 
 contextualize(CorrelationId(UUID.randomUUID.toString))
@@ -94,7 +94,7 @@ logger.info("Some message") // Includes original correlation id
 
 ```
 See [Examples](#included-code-examples)
-See [Unit Tests](correlation/src/test/scala/org/kalergic/contextual/v0/correlation/CorrelationIdSupportSpec.scala)
+See [Unit Tests](correlation/src/test/scala/org/kalergic/contextual/v0/correlation/CorrelationIdMDCSupportSpec.scala)
 
 ## Dependencies
 

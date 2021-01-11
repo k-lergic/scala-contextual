@@ -12,7 +12,7 @@ class CorrelationIdSupportSpec extends AnyFlatSpec with BeforeAndAfterEach with 
   override def beforeEach(): Unit = clearContext()
 
   "CorrelationIdSupport" should "register an observer set the correlation id in MDC when it is contextualized" in {
-    CorrelationIdSupport.install()
+    CorrelationIdMDCSupport.install()
 
     val correlationId = CorrelationId("foo")
     contextualize[CorrelationId](correlationId)
@@ -21,7 +21,7 @@ class CorrelationIdSupportSpec extends AnyFlatSpec with BeforeAndAfterEach with 
   }
 
   it should "overwrite a correlation id in MDC when a new one is contextualized" in {
-    CorrelationIdSupport.install()
+    CorrelationIdMDCSupport.install()
 
     val correlationId = CorrelationId("foo")
     contextualize[CorrelationId](correlationId)
@@ -35,7 +35,7 @@ class CorrelationIdSupportSpec extends AnyFlatSpec with BeforeAndAfterEach with 
   }
 
   it should "remove a correlation id in MDC when the correlation id is decontextualized" in {
-    CorrelationIdSupport.install()
+    CorrelationIdMDCSupport.install()
 
     val correlationId = CorrelationId("foo")
     contextualize[CorrelationId](correlationId)
