@@ -1,7 +1,6 @@
 package org.kalergic.contextual.examples.akkastreams
 
 import com.typesafe.scalalogging.StrictLogging
-//import org.kalergic.contextual.v0.contextualize._
 
 object PrintTweetHashtags extends App with StrictLogging {
 

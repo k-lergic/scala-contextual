@@ -63,8 +63,10 @@ lazy val correlation = (projectMatrix in file("correlation"))
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
 
 lazy val examples = (projectMatrix in file("examples"))
+  .dependsOn(context)
   .dependsOn(correlation)
   .settings(
+    coverageEnabled := false,
     publishArtifact := false,
     libraryDependencies ++= Seq(
       akkaStreams,
