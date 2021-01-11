@@ -232,4 +232,18 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
       fakeListener.removes.threadIds shouldBe Seq(expectedThreadId)
     }
   }
+
+  it should "notify listeners of puts when activating for a thread (i.e. when the type parameter has been erased)" in new ListenerManagerFixture {
+    manager.addListener(fakeListener)
+    assume(manager.currentListeners.contains(fakeListener))
+    manager.notifyPut[Any](testKey.asInstanceOf[ContextKey[Any]])("hello")
+    fakeListener.puts.values shouldBe Seq("hello")
+  }
+
+  it should "notify listeners of puts when deactivating for a thread (i.e. when the type parameter has been erased)" in new ListenerManagerFixture {
+    manager.addListener(fakeListener)
+    assume(manager.currentListeners.contains(fakeListener))
+    manager.notifyRemove[Any](testKey.asInstanceOf[ContextKey[Any]])("goodbye")
+    fakeListener.removes.values shouldBe Seq("goodbye")
+  }
 }

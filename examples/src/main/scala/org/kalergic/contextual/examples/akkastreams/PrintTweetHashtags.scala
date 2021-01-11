@@ -1,6 +1,12 @@
 package org.kalergic.contextual.examples.akkastreams
 
+import java.util.UUID
+
+import scala.concurrent.Future
+
 import com.typesafe.scalalogging.StrictLogging
+import org.kalergic.contextual.v0.contextualize._
+import org.kalergic.contextual.v0.correlation.{CorrelationId, CorrelationIdSupport}
 
 object PrintTweetHashtags extends App with StrictLogging {
 
@@ -9,19 +15,29 @@ object PrintTweetHashtags extends App with StrictLogging {
   import akka.stream.scaladsl._
   val akkaTag = Hashtag("#akka")
 
-  val tweets: Source[Tweet, NotUsed] = Source(
-    Tweet(Author("rolandkuhn"), System.currentTimeMillis, "#akka rocks!") ::
-      Tweet(Author("patriknw"), System.currentTimeMillis, "#akka !") ::
-      Tweet(Author("bantonsson"), System.currentTimeMillis, "#akka !") ::
-      Tweet(Author("drewhk"), System.currentTimeMillis, "#akka !") ::
-      Tweet(Author("ktosopl"), System.currentTimeMillis, "#akka on the rocks!") ::
-      Tweet(Author("mmartynas"), System.currentTimeMillis, "wow #akka !") ::
-      Tweet(Author("akkateam"), System.currentTimeMillis, "#akka rocks!") ::
-      Tweet(Author("bananaman"), System.currentTimeMillis, "#bananas rock!") ::
-      Tweet(Author("appleman"), System.currentTimeMillis, "#apples rock!") ::
-      Tweet(Author("drama"), System.currentTimeMillis, "we compared #apples to #oranges!") ::
-      Nil
+  CorrelationIdSupport.install()
+  implicit val system: ActorSystem = ActorSystem(
+    name = "reactive-tweets",
+    defaultExecutionContext = Some(contextualized(scala.concurrent.ExecutionContext.Implicits.global))
   )
+
+  // Must defer creation of source until materialization to contextualize correlation id.
+  val tweets: Source[Tweet, Future[NotUsed]] = Source.fromMaterializer[Tweet, NotUsed] { (_, _) =>
+    contextualize(CorrelationId(UUID.randomUUID.toString))
+    Source(
+      Tweet(Author("rolandkuhn"), System.currentTimeMillis, "#akka rocks!") ::
+        Tweet(Author("patriknw"), System.currentTimeMillis, "#akka !") ::
+        Tweet(Author("bantonsson"), System.currentTimeMillis, "#akka !") ::
+        Tweet(Author("drewhk"), System.currentTimeMillis, "#akka !") ::
+        Tweet(Author("ktosopl"), System.currentTimeMillis, "#akka on the rocks!") ::
+        Tweet(Author("mmartynas"), System.currentTimeMillis, "wow #akka !") ::
+        Tweet(Author("akkateam"), System.currentTimeMillis, "#akka rocks!") ::
+        Tweet(Author("bananaman"), System.currentTimeMillis, "#bananas rock!") ::
+        Tweet(Author("appleman"), System.currentTimeMillis, "#apples rock!") ::
+        Tweet(Author("drama"), System.currentTimeMillis, "we compared #apples to #oranges!") ::
+        Nil
+    )
+  }
 
   final case class Author(handle: String)
 
@@ -37,11 +53,6 @@ object PrintTweetHashtags extends App with StrictLogging {
         }
         .toSet
   }
-
-  implicit val system: ActorSystem = ActorSystem(
-    name = "reactive-tweets",
-    defaultExecutionContext = Some(scala.concurrent.ExecutionContext.Implicits.global)
-  )
 
   tweets
     .map { tw =>

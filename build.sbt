@@ -70,7 +70,8 @@ lazy val examples = (projectMatrix in file("examples"))
     publishArtifact := false,
     libraryDependencies ++= Seq(
       akkaStreams,
-      logback
+      logback,
+      scalaLogging
     )
   )
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))

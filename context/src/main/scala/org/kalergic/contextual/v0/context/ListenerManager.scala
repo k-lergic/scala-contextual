@@ -38,7 +38,13 @@ private[context] class ListenerManagerImpl extends ListenerManager with Listener
   )(
     updateFn: ContextValueListener[V] => V => Unit
   ): Unit =
-    currentListeners.filter(l => l.contextKey == key && typeOf[V] <:< l.valueTypeTag.tpe).foreach {
+//    currentListeners.foreach { l =>
+//      println(s"listener key: ${l.contextKey}, key=$key")
+//      println(s"typeOf[V]: ${typeOf[V]}, listener value type: ${l.valueTypeTag.tpe}")
+//      println(s"${l.name}: key matches: ${l.contextKey == key}")
+//      println(s"${l.name}: type matches: ${typeOf[V] <:< l.valueTypeTag.tpe}")
+//    }
+    currentListeners.filter(l => l.contextKey == key /* && typeOf[V] <:< l.valueTypeTag.tpe */ ).foreach {
       case listener: ContextValueListener[V @unchecked] =>
         try {
           updateFn(listener)(value)
