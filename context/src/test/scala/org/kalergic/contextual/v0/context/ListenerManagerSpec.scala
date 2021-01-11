@@ -121,6 +121,25 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
     anotherListener.puts.values shouldBe Seq("hello, world!")
   }
 
+  it should "continue to notify registered listeners for a key on puts if another listener for that key is removed" in new ListenerManagerFixture {
+    manager.addListener(fakeListener)
+    val anotherListener = new FakeListener(testKey)
+    manager.addListener(anotherListener)
+
+    assume(manager.currentListeners.toSet === Set(fakeListener, anotherListener))
+
+    manager.notifyPut(testKey)("hello, world!")
+
+    assume(fakeListener.puts.values === Seq("hello, world!"))
+    assume(anotherListener.puts.values === Seq("hello, world!"))
+
+    manager.removeListener(anotherListener)
+    manager.notifyPut(testKey)("hello, again!")
+
+    fakeListener.puts.values shouldBe Seq("hello, world!", "hello, again!")
+    anotherListener.puts.values shouldBe Seq("hello, world!")
+  }
+
   it should "notify all registered listeners for a key on notification of a remove" in new ListenerManagerFixture {
     manager.addListener(fakeListener)
     val anotherListener = new FakeListener(testKey)
@@ -131,6 +150,25 @@ class ListenerManagerSpec extends AnyFlatSpec with should.Matchers {
     manager.notifyRemove(testKey)("goodbye, world!")
 
     fakeListener.removes.values shouldBe Seq("goodbye, world!")
+    anotherListener.removes.values shouldBe Seq("goodbye, world!")
+  }
+
+  it should "continue to notify registered listeners for a key on remove if another listener for that key is removed" in new ListenerManagerFixture {
+    manager.addListener(fakeListener)
+    val anotherListener = new FakeListener(testKey)
+    manager.addListener(anotherListener)
+
+    assume(manager.currentListeners.toSet === Set(fakeListener, anotherListener))
+
+    manager.notifyRemove(testKey)("goodbye, world!")
+
+    assume(fakeListener.removes.values === Seq("goodbye, world!"))
+    assume(anotherListener.removes.values === Seq("goodbye, world!"))
+
+    manager.removeListener(anotherListener)
+    manager.notifyRemove(testKey)("goodbye, again!")
+
+    fakeListener.removes.values shouldBe Seq("goodbye, world!", "goodbye, again!")
     anotherListener.removes.values shouldBe Seq("goodbye, world!")
   }
 

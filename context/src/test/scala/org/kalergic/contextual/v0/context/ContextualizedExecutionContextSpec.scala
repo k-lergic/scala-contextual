@@ -38,5 +38,4 @@ class ContextualizedExecutionContextSpec extends AnyFlatSpec with should.Matcher
     contextualizedEC.reportFailure(throwable)
     fakeEC.throwables shouldBe Seq(throwable)
   }
-
 }

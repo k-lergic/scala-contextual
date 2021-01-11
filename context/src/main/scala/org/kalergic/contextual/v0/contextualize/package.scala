@@ -1,5 +1,6 @@
 package org.kalergic.contextual.v0
 
+import scala.concurrent.ExecutionContext
 import scala.reflect.runtime.universe._
 
 import org.kalergic.contextual.v0.context.{ContextKey, Contextual}
@@ -8,17 +9,22 @@ package object contextualize {
 
   private[this] val contextual: Contextual = Contextual()
 
-  def contextualize[V <: Summonable[V]: TypeTag](v: V): Unit = contextual.put(keyFor[V](), v)
-  def decontextualize[V <: Summonable[V]: TypeTag](): Unit = contextual.remove[V](keyFor[V]())
-  def clearContextualizedData(): Unit = contextual.clear()
+  def contextualize(ec: ExecutionContext): ExecutionContext = {
+    import org.kalergic.contextual.v0.context.ContextualizedExecutionContext.Implicits._
+    ec.contextualized
+  }
 
-  def summon[V <: Summonable[V]: TypeTag]: Option[V] = contextual.get(keyFor[V]())
+  def contextualize[V <: Contextualizable[V]: TypeTag](v: V): Unit = contextual.put(keyFor[V], v)
+  def decontextualize[V <: Contextualizable[V]: TypeTag](): Unit = contextual.remove[V](keyFor[V])
+  def clearContext(): Unit = contextual.clear()
 
-  def observe[V <: Observable[V]](observer: Observer[V]): Unit = contextual.addListener(observer)
-  def stopObserving[V <: Observable[V]](observer: Observer[V]): Unit = contextual.removeListener(observer)
+  def summon[V <: Contextualizable[V]: TypeTag]: Option[V] = contextual.get(keyFor[V])
 
-  private[contextualize] def keyNameFor[V: TypeTag](prefix: Option[String] = None): String =
-    s"contextual.summonable.${prefix.map(p => s"$p.").getOrElse("")}.${typeOf[V]}"
-  private[contextualize] def keyFor[V: TypeTag](prefix: Option[String] = None): ContextKey[V] =
-    ContextKey.forType[V](keyNameFor[V](prefix))
+  def startObserving[V <: Contextualizable[V]](observer: ContextObserver[V]): Unit = contextual.addListener(observer)
+  def stopObserving[V <: Contextualizable[V]](observer: ContextObserver[V]): Unit = contextual.removeListener(observer)
+
+  private[this] def keyNameFor[V <: Contextualizable[V]: TypeTag]: String = typeOf[V].toString
+
+  private[contextualize] def keyFor[V <: Contextualizable[V]: TypeTag]: ContextKey[V] =
+    ContextKey.forType[V](keyNameFor[V])
 }
