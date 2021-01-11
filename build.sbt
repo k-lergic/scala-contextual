@@ -62,6 +62,13 @@ lazy val correlation = (projectMatrix in file("correlation"))
   .settings(libraryDependencies += logback % Test) // Tests require a logging framework that uses MDC.
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
 
-lazy val akkaStreamExample = (projectMatrix in file("akka-stream-example"))
+lazy val examples = (projectMatrix in file("examples"))
   .dependsOn(correlation)
+  .settings(
+    publishArtifact := false,
+    libraryDependencies ++= Seq(
+      akkaStreams,
+      logback
+    )
+  )
   .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))

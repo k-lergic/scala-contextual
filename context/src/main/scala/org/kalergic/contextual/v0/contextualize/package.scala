@@ -9,7 +9,7 @@ package object contextualize {
 
   private[this] val contextual: Contextual = Contextual()
 
-  def contextualize(ec: ExecutionContext): ExecutionContext = {
+  def contextualized(ec: ExecutionContext): ExecutionContext = {
     import org.kalergic.contextual.v0.context.ContextualizedExecutionContext.Implicits._
     ec.contextualized
   }

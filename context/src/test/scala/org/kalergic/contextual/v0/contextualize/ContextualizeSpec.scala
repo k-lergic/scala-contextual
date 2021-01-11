@@ -117,18 +117,18 @@ class ContextualizeSummonSpec extends AnyFlatSpec with BeforeAndAfterEach with s
     kListInt.valueTypeTag shouldBe typeTag[TestHigherId[List[Int]]]
   }
 
-  "contextualize (execution context)" should "wrap an execution context" in {
+  "contextualized (execution context)" should "wrap an execution context" in {
     val ec = scala.concurrent.ExecutionContext.Implicits.global
-    val cec = contextualize(ec)
+    val cec = contextualized(ec)
     cec match {
       case _: ContextualizedExecutionContext => // ok
       case x => fail(s"wrong type: $x")
     }
   }
 
-  "contextualize (execution context)" should "not re-wrap a ContextualizedExecutionContext" in {
+  it should "not re-wrap a ContextualizedExecutionContext" in {
     val ec = scala.concurrent.ExecutionContext.Implicits.global
-    contextualize(ec) eq ec
+    contextualized(ec) eq ec
   }
 
   "startObserving" should "register an observer and allow context changes to be propagated to the observer" in {
