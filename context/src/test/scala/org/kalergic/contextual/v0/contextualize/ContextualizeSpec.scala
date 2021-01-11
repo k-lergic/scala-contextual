@@ -9,8 +9,8 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-case class TestId(id: String) extends Contextualizable[TestId]
-case class TestHigherId[A: TypeTag](a: A) extends Contextualizable[TestHigherId[A]]
+case class TestId(id: String) extends Contextualizable
+case class TestHigherId[A](a: A) extends Contextualizable
 
 class ContextualizeSummonSpec extends AnyFlatSpec with BeforeAndAfterEach with should.Matchers with ScalaFutures {
 

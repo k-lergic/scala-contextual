@@ -4,7 +4,7 @@ import scala.reflect.runtime.universe._
 
 import org.kalergic.contextual.v0.context.FakeListener
 
-class FakeObserver[V <: Contextualizable[V]: TypeTag] extends ContextObserver[V] {
+class FakeObserver[V <: Contextualizable: TypeTag] extends ContextObserver[V] {
 
   // Use the FakeListener to hold information delivered to this observer
   val listener: FakeListener[V] = new FakeListener[V](contextKey)
