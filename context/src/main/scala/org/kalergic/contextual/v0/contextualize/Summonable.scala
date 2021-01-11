@@ -1,4 +1,4 @@
-package org.kalergic.contextual.v0.summon
+package org.kalergic.contextual.v0.contextualize
 
 import scala.reflect.runtime.{universe => ru}
 import scala.reflect.runtime.universe.TypeTag

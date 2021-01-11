@@ -1,4 +1,4 @@
-package org.kalergic.contextual.v0.summon
+package org.kalergic.contextual.v0.contextualize
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.runtime.universe._
@@ -102,5 +102,37 @@ class ContextualizeSummonSpec extends AnyFlatSpec with BeforeAndAfterEach with s
     assume(outerFutureExecuted)
     assume(innerFutureExecuted)
     summon[TestId] should contain(originalTestId)
+  }
+
+  "keyNameFor" should "construct the correct key name for a simple type" in {
+    fail()
+  }
+
+  it should "construct the correct key name for a higher-kinded type" in {
+    fail()
+  }
+
+  it should "apply the prefix correctly in the key name if provided" in {
+    fail()
+  }
+
+  "keyFor" should "construct the correct key for a simple type" in {
+    fail()
+  }
+
+  it should "construct the correct key for a higher-kinded type" in {
+    fail()
+  }
+
+  it should "apply the prefix correctly in the key name if provided" in {
+    fail()
+  }
+
+  "execution contexts" should "be tested" in {
+    fail("test me") // same as underlying
+  }
+
+  "observers" should "be tested" in {
+    fail("test me")
   }
 }

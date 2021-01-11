@@ -21,26 +21,37 @@ ThisBuild / resolvers += "Artima Maven Repository" at "https://repo.artima.com/r
 
 publishArtifact := false
 
+lazy val commonSettings = Seq(
+  // This is required because sbt-project-matrix (for cross-compiling) has its own idea of what the project name is;
+  // we need to adjust for that.
+  name := shadingNameShader.value(s"scala-contextual-${name.value}"),
+  semVerEnforceAfterVersion := Some("1.0.0"),
+  scalacOptions ++= Seq(
+    "-unchecked",
+    "-deprecation",
+    "-Xlint",
+    "-Xfatal-warnings",
+    "-Ywarn-dead-code"
+  ),
+  coverageEnabled := true,
+  libraryDependencies ++= Seq(
+    scalaCollectionCompat,
+    scalactic,
+    scalaLogging,
+    TestLibs.scalatest
+  )
+)
+
+
 lazy val context = (projectMatrix in file("context"))
   .enablePlugins(SemVerPlugin)
   .enablePlugins(ShadingPlugin)
-  .settings(
-    // This is required because sbt-project-matrix (for cross-compiling) has its own idea of what the project name is;
-    // we need to adjust for that.
-    name := shadingNameShader.value(s"scala-contextual-${name.value}"),
-    semVerEnforceAfterVersion := Some("1.0.0"),
-    scalacOptions ++= Seq(
-      "-unchecked",
-      "-deprecation",
-      "-Xlint",
-      "-Xfatal-warnings",
-      "-Ywarn-dead-code"
-    ),
-    coverageEnabled := true,
-    libraryDependencies ++= Seq(
-      scalaCollectionCompat,
-      scalactic,
-      scalaLogging,
-      TestLibs.scalatest
-    ),
-  ).jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
+  .settings(commonSettings)
+  .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
+
+lazy val correlation = (projectMatrix in file("correlation"))
+  .enablePlugins(SemVerPlugin)
+  .enablePlugins(ShadingPlugin)
+  .dependsOn(context)
+  .settings(commonSettings)
+  .jvmPlatform(scalaVersions = Seq(scala2_12, scala2_13))
