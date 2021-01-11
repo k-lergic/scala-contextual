@@ -7,7 +7,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.kalergic.contextual.v0.contextualize._
-import org.kalergic.contextual.v0.correlation.{CorrelationId, CorrelationIdMDCSupport}
+import org.kalergic.contextual.v0.correlation.{CorrelationId, CorrelationIdLogging}
 
 object FuturesExample extends App with StrictLogging {
 
@@ -15,7 +15,7 @@ object FuturesExample extends App with StrictLogging {
   implicit val ec: ExecutionContext = contextualized(Implicits.global)
 
   // Install support for correlation ids
-  CorrelationIdMDCSupport.install()
+  CorrelationIdLogging.install()
 
   // Somewhere else ...
 

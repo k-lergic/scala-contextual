@@ -63,8 +63,7 @@ import org.kalergic.contextual.v0.contextualize._
 import org.kalergic.contextual.v0.correlation._
 
 implicit val ec: ExecutionContext = contextualized(someScalaExecutionContext)
-CorrelationIdMDCSupport.install()
-
+CorrelationIdLogging.install()
 
 contextualize(CorrelationId(UUID.randomUUID.toString))
 
